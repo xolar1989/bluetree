@@ -1,0 +1,133 @@
+version: '3.9'
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:14.3
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: carlosCarlitos
+      POSTGRES_PASSWORD: karol12345
+      PGDATA: /data/postgres
+      POSTGRES_DB: micro_db
+    volumes:
+      - postgres_vol:/data/postgres
+    networks:
+      - postgres_network
+    restart: unless-stopped
+  customer:
+    container_name: customer
+    build:
+      context: ./.
+      dockerfile: ./customer/Dockerfile
+    ports:
+     - "8080:8080"
+    networks:
+      - postgres_network
+      - inner_network
+    depends_on:
+      - zipkin
+      - eureka-server
+      - postgres
+      - rabbitmq
+    restart: on-failure
+  fraud:
+    container_name: fraud
+    build:
+      context: ./.
+      dockerfile: ./fraud/Dockerfile
+    ports:
+      - "8081:8081"
+    networks:
+      - postgres_network
+      - inner_network
+    depends_on:
+      - zipkin
+      - eureka-server
+      - postgres
+      - rabbitmq
+    restart: on-failure
+  notification:
+    container_name: notification
+    build:
+      context: ./.
+      dockerfile: ./notification/Dockerfile
+    ports:
+      - "8082:8082"
+    networks:
+      - postgres_network
+      - inner_network
+    depends_on:
+      - rabbitmq
+      - postgres
+      - zipkin
+      - eureka-server
+    restart: on-failure
+  gateway:
+    container_name: gateway
+    build:
+      context: ./.
+      dockerfile: ./gateway/Dockerfile
+    ports:
+      - "8083:8083"
+    networks:
+      - inner_network
+    restart: on-failure
+  proxy:
+    container_name: proxy
+    build:
+      context: ./.
+      dockerfile: ./proxy/Dockerfile
+    depends_on:
+      - gateway
+    ports:
+      - "80:80"
+    networks:
+      - inner_network
+    restart: on-failure
+  eureka-server:
+    container_name: eureka-server
+    build:
+      context: ./.
+      dockerfile: ./eureka-server/Dockerfile
+    ports:
+      - "8761:8761"
+    networks:
+      - postgres_network
+      - inner_network
+    restart: on-failure
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+    networks:
+      - inner_network
+  rabbitmq:
+    image: rabbitmq:3.9.11-management-alpine
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - inner_network
+
+
+
+
+
+networks:
+  postgres_network:
+    driver: bridge
+    name: postgres_network
+  inner_network:
+    driver: bridge
+    name: inner_network
+
+volumes:
+  postgres_vol:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: C:\Users\karol\Desktop\projekty-ogolne\micro-learn\db\postgres

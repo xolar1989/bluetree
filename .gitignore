@@ -1,0 +1,13 @@
+# Project exclude paths
+/amqp/target/
+/client/target/
+/notification/target/
+/gateway/target/
+/fraud/target/
+/db
+/eureka-server/target
+/customer/target
+
+/*/HELP.md
+
+.idea
