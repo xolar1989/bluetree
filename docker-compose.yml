@@ -1,4 +1,5 @@
 version: '3.9'
+
 services:
   postgres:
     container_name: postgres
@@ -30,7 +31,7 @@ services:
       - eureka-server
       - postgres
       - rabbitmq
-    restart: on-failure
+    restart: unless-stopped
   fraud:
     container_name: fraud
     build:
@@ -46,7 +47,7 @@ services:
       - eureka-server
       - postgres
       - rabbitmq
-    restart: on-failure
+    restart: unless-stopped
   notification:
     container_name: notification
     build:
@@ -84,7 +85,7 @@ services:
       - "80:80"
     networks:
       - inner_network
-    restart: on-failure
+    restart: unless-stopped
   eureka-server:
     container_name: eureka-server
     build:
