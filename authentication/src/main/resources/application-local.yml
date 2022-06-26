@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    username: karol
+    password: admin
+    url: jdbc:h2:file:./authentication/db1
+    driverClassName: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: update
+  zipkin:
+    enabled: false
+eureka:
+  client:
+    enabled: false

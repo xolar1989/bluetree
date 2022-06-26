@@ -1,0 +1,11 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: authentication
+  profiles:
+    active: local
+jwt:
+  secret: 'eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiZmFqbnlwaWVzZWsiLCJJc3N1ZXIiOiJzYW5kcmFCdWdvd3Nrd2EiLCJVc2VybmFtZSI6ImNhcmxvc0NhcmxpdG9zIn0.CgIE081WPHddICAUYzu51vkFYLdY_0Gr8sC5s94xp-E'
+  validity: 60000
+  prefix: 'Bearer'

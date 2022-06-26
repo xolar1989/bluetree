@@ -26,11 +26,11 @@ public class GatewayApplication {
         return builder
                 .routes()
                 .route("customers", r -> r
-                        .host("gateway:8083")
+                        .host("http://localhost:8083")
                         .and()
                         .path("/api/v1/customers/**")
 //                        .uri("lb://CUSTOMER")
-                        .uri("http://customer:8080")
+                        .uri("http://localhost:8080")
                 )
                 .build();
 
